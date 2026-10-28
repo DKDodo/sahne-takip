@@ -20,7 +20,7 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 | 10 | Bölüşme hesabı | ✅ Sahne başına ekip payları ("eşit böl"); kime ne kadar borcum kaldı |
 | 11 | Bu ay ne kadar kazandım | ✅ Pano'da ve Kazanç ekranında aylık |
 | 12 | Commit ve yayın kullanıcı onayıyla | ✅ 28 Ekim: onaylandı (49df915), site yayında |
-| 13 | Daha hoş yazı tipi ve logo; açılan pencereler temaya uysun | ✅ KARAR (28 Ekim): yazı tipi **Sora** (C), logo **ses dalgası ve ₺** (3). Telefonun gri onay/uyarı kutuları ve açılır listeleri yerine uygulamanın alttan açılan pencereleri; tarih/saat seçici telefonun, rengi sarı. Android 412 ve 360 px'te 40/40 |
+| 13 | Daha hoş yazı tipi ve logo; açılan pencereler temaya uysun | ✅ KARAR (28 Ekim): yazı tipi **Sora** (C), logo **ses dalgası ve ₺** (3). Telefonun gri onay/uyarı kutuları ve açılır listeleri yerine uygulamanın alttan açılan pencereleri; tarih/saat seçici telefonun, rengi sarı. Android 412 ve 360 px'te 40/40. Android ana ekran simgesi güvenli alanda (daire, kare, damla kırpmasında kesilmez) |
 
 ## Kararlar (28 Ekim 2026)
 
