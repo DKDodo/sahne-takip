@@ -1,0 +1,51 @@
+# Sahne Takip — otomatik yayın
+# main dalına her gönderimde: testler → derleme → GitHub Pages (https://dkdodo.github.io/sahne-takip/).
+# Depo ayarı bir kez yapılır: Settings → Pages → Source: "GitHub Actions".
+# Kodda kişisel veri ya da gizli anahtar yoktur; kayıtlar telefonda ve Supabase'de durur.
+
+name: Yayın
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  derle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Bağımlılıklar
+        run: npm ci
+      - name: Testler (geçmezse yayın yapılmaz)
+        run: npm test
+      - name: Derleme
+        run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  yayinla:
+    needs: derle
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.yayin.outputs.page_url }}
+    steps:
+      - id: yayin
+        uses: actions/deploy-pages@v4
