@@ -2,7 +2,7 @@ import { ArrowUpRight, Pencil, Phone, Plus, Trash2, Users } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFormAc } from '../components/formlar'
 import { BolumBasligi, ParaSatiri, TarihKutusu } from '../components/parcalar'
-import { Baslik, Bos, Dugme, Kart, Liste, Ozet, Satir, useBildirim } from '../components/ui'
+import { Baslik, Bos, Dugme, Kart, Liste, onayla, Ozet, Satir, useBildirim, uyar } from '../components/ui'
 import { bugun, para } from '../lib/format'
 import { kisiOzeti, kisiPaylari } from '../lib/hesap'
 import { adBul, sil, type TumVeri } from '../lib/veri'
@@ -93,7 +93,8 @@ export function KisiDetay({ veri }: { veri: TumVeri }) {
           tur="hayalet"
           className="text-red-600"
           onClick={async () => {
-            if (liste.length || gonderimler.length) return alert('Bu kişinin payları ya da gönderimleri var. Önce onları silin.')
+            if (liste.length || gonderimler.length) return uyar({ baslik: 'Bu kişi silinemez', mesaj: 'Bu kişinin payları ya da gönderimleri var. Önce onları silin.' })
+            if (!(await onayla({ baslik: 'Kişi silinsin mi?', mesaj: `${k.ad}. Silinenler'den geri alabilirsiniz.`, evet: 'Sil', tehlike: true }))) return
             const geri = await sil('kisiler', k.id)
             bildir('Kişi silindi', geri)
             git('/ekip', { replace: true })

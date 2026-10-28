@@ -2,7 +2,7 @@ import { RotateCcw, Trash2 } from 'lucide-react'
 import { db, type Gonderim, type Kisi, type Mekan, type Sahne, type Silinen, type TabloAdi, type Tahsilat } from '../db'
 import { para, tarihGoster } from '../lib/format'
 import { adBul, geriYukle, kaliciSil, useCanli, type TumVeri } from '../lib/veri'
-import { Bos, Dugme, Kart, Rozet, useBildirim } from './ui'
+import { Bos, Dugme, Kart, onayla, Rozet, useBildirim } from './ui'
 
 export const TABLO_ADLARI: Record<TabloAdi, string> = {
   sahneler: 'Sahne',
@@ -93,7 +93,7 @@ export function SilinenlerListesi({ veri, tablo }: { veri: TumVeri; tablo?: Tabl
                     title="Kalıcı sil"
                     className="text-red-600"
                     onClick={async () => {
-                      if (!confirm('Bu kayıt kalıcı olarak silinecek ve geri alınamayacak. Emin misiniz?')) return
+                      if (!(await onayla({ baslik: 'Kalıcı olarak silinsin mi?', mesaj: `${o.baslik}: bu kayıt bir daha geri alınamayacak.`, evet: 'Kalıcı sil', tehlike: true }))) return
                       await kaliciSil([s.id])
                       bildir('Kalıcı olarak silindi')
                     }}

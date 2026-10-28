@@ -2,7 +2,7 @@ import { ArrowDownLeft, ArrowUpRight, Mic, Pencil, Plus, Trash2 } from 'lucide-r
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useFormAc } from '../components/formlar'
 import { BolumBasligi, DurumRozeti, ParaSatiri, SahneSatiri } from '../components/parcalar'
-import { Baslik, Bos, Dugme, Kart, Liste, Ozet, Sekmeler, useBildirim } from '../components/ui'
+import { Baslik, Bos, Dugme, Kart, Liste, onayla, Ozet, Sekmeler, useBildirim } from '../components/ui'
 import { bugun, para, tarihUzun } from '../lib/format'
 import { ayAdi, benimPayim, kisiPaylari, paylarToplami, sahneDurumlari, toplam, type TahsilDurumu } from '../lib/hesap'
 import { adBul, sil, type TumVeri } from '../lib/veri'
@@ -118,7 +118,7 @@ export function SahneDetay({ veri }: { veri: TumVeri }) {
           tur="hayalet"
           className="text-red-600"
           onClick={async () => {
-            if (!confirm('Bu sahne silinsin mi? Silinenler\'den geri alabilirsiniz.')) return
+            if (!(await onayla({ baslik: 'Sahne silinsin mi?', mesaj: `${mekan} · ${tarihUzun(s.tarih)}. Silinenler'den geri alabilirsiniz.`, evet: 'Sil', tehlike: true }))) return
             const geri = await sil('sahneler', s.id)
             bildir('Sahne silindi', geri)
             git('/sahneler', { replace: true })

@@ -74,19 +74,19 @@ export default function Pano({ veri }: { veri: TumVeri }) {
           <div className="flex items-center gap-1.5 text-[13px] font-medium text-stone-500">
             <ArrowDownLeft size={15} /> Alacağım
           </div>
-          <div className="mt-1 text-xl font-semibold tracking-tight text-emerald-600 tabular-nums dark:text-emerald-400">{para(alacak)}</div>
+          <div className="mt-1 text-[clamp(16px,4.8vw,20px)] leading-tight font-semibold tracking-tight whitespace-nowrap text-emerald-600 tabular-nums dark:text-emerald-400">{para(alacak)}</div>
           <div className="mt-0.5 text-xs text-stone-500">{bekleyen.length} sahneden</div>
         </button>
         <button type="button" onClick={() => git('/ekip')} className="rounded-2xl bg-white p-4 text-left ring-1 ring-stone-200/80 dark:bg-stone-900 dark:ring-stone-800">
           <div className="flex items-center gap-1.5 text-[13px] font-medium text-stone-500">
             <ArrowUpRight size={15} /> Göndereceğim
           </div>
-          <div className="mt-1 text-xl font-semibold tracking-tight text-sky-700 tabular-nums dark:text-sky-400">{para(borc)}</div>
+          <div className="mt-1 text-[clamp(16px,4.8vw,20px)] leading-tight font-semibold tracking-tight whitespace-nowrap text-sky-700 tabular-nums dark:text-sky-400">{para(borc)}</div>
           <div className="mt-0.5 text-xs text-stone-500">ekip payları</div>
         </button>
       </div>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Kart>
           <BolumBasligi
             simge={<Clock size={18} />}

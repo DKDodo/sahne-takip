@@ -3,7 +3,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { FormSaglayici, useAlanGorunur } from './components/formlar'
 import { HataSiniri } from './components/HataSiniri'
 import { Kabuk } from './components/Kabuk'
-import { BildirimSaglayici } from './components/ui'
+import { BildirimSaglayici, SoruKatmani } from './components/ui'
 import { bulut, izinliMi, useOturum } from './lib/bulut'
 import { bulutHazir } from './lib/bulutAyar'
 import { esitlemeBaslat, esitlemeDurdur, esitlemeIste } from './lib/esitleme'
@@ -92,6 +92,7 @@ function Uygulama() {
             </HataSiniri>
           </Kabuk>
         </FormSaglayici>
+        <SoruKatmani />
       </BildirimSaglayici>
     </HashRouter>
   )

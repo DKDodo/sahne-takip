@@ -1,30 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="z" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#292524"/>
-      <stop offset="1" stop-color="#0c0a09"/>
-    </linearGradient>
-    <linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#fcd34d"/>
-      <stop offset="1" stop-color="#f59e0b"/>
-    </linearGradient>
-    <radialGradient id="i" cx="0.5" cy="0.3" r="0.6">
-      <stop offset="0" stop-color="#f59e0b" stop-opacity=".28"/>
-      <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
-    </radialGradient>
+    <linearGradient id="z" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#292524"/><stop offset="1" stop-color="#0c0a09"/></linearGradient>
+    <linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+    <linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></linearGradient>
   </defs>
   <rect width="512" height="512" rx="112" fill="url(#z)"/>
-  <rect width="512" height="512" rx="112" fill="url(#i)"/>
-  <!-- mikrofon başı -->
-  <rect x="196" y="92" width="120" height="196" rx="60" fill="url(#a)"/>
-  <g stroke="#78350f" stroke-opacity=".45" stroke-width="10" stroke-linecap="round">
-    <line x1="222" y1="150" x2="290" y2="150"/>
-    <line x1="222" y1="184" x2="290" y2="184"/>
-    <line x1="222" y1="218" x2="290" y2="218"/>
+  <!-- ses dalgası (ekolayzer) -->
+  <g fill="url(#a)">
+    <rect x="92" y="226" width="34" height="60" rx="17"/>
+    <rect x="144" y="186" width="34" height="140" rx="17"/>
+    <rect x="196" y="136" width="34" height="240" rx="17"/>
+    <rect x="248" y="96" width="34" height="320" rx="17"/>
+    <rect x="300" y="146" width="34" height="220" rx="17"/>
+    <rect x="352" y="196" width="34" height="120" rx="17"/>
   </g>
-  <rect x="220" y="104" width="22" height="70" rx="11" fill="#fff" fill-opacity=".35"/>
-  <!-- ayak -->
-  <path d="M152 232v14a104 104 0 0 0 208 0v-14" fill="none" stroke="url(#a)" stroke-width="26" stroke-linecap="round"/>
-  <line x1="256" y1="352" x2="256" y2="404" stroke="url(#a)" stroke-width="26" stroke-linecap="round"/>
-  <line x1="196" y1="414" x2="316" y2="414" stroke="url(#a)" stroke-width="26" stroke-linecap="round"/>
+  <!-- ₺ rozeti -->
+  <circle cx="386" cy="386" r="78" fill="#0c0a09"/>
+  <circle cx="386" cy="386" r="64" fill="url(#p)"/>
+  <g fill="none" stroke="#1c1917" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M372 344v78c26 0 44-16 46-40"/>
+    <path d="M352 376l44-18M352 400l44-18"/>
+  </g>
 </svg>

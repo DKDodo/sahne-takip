@@ -1,7 +1,7 @@
 import { Cloud, Download, FileSpreadsheet, KeyRound, LogOut, Moon, RefreshCw, Smartphone, Sun, Trash2, Upload } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
 import { TelefonaGec } from '../components/TelefonaGec'
-import { Baslik, Dugme, Etiket, Girdi, Kart, useBildirim } from '../components/ui'
+import { Baslik, Dugme, Etiket, Girdi, Kart, onayla, useBildirim, uyar, yaziIste } from '../components/ui'
 import { cikis, sifreBelirle, useOturum } from '../lib/bulut'
 import { bulutHazir } from '../lib/bulutAyar'
 import { buluttanYenidenIndir, esitle, useEsitleme, type EsitlemeHali } from '../lib/esitleme'
@@ -87,13 +87,13 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
                 const f = e.target.files?.[0]
                 e.target.value = ''
                 if (!f) return
-                if (!confirm('Bu cihazdaki tüm kayıtlar silinip yedekteki kayıtlarla değiştirilecek. Devam edilsin mi?')) return
+                if (!(await onayla({ baslik: 'Yedek yüklensin mi?', mesaj: 'Bu cihazdaki tüm kayıtlar silinip yedekteki kayıtlarla değiştirilecek.', evet: 'Yükle' }))) return
                 setBekle(true)
                 try {
                   const n = await yedektenYukle(JSON.parse(await f.text()))
                   bildir(`Yedek yüklendi: ${n} kayıt`)
                 } catch (err) {
-                  alert(err instanceof Error ? err.message : 'Dosya okunamadı.')
+                  await uyar({ baslik: 'Yedek yüklenemedi', mesaj: err instanceof Error ? err.message : 'Dosya okunamadı.' })
                 } finally {
                   setBekle(false)
                 }
@@ -139,11 +139,12 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
               tur="tehlike"
               disabled={!kayitSayisi}
               onClick={async () => {
-                if (!confirm('Bu cihazdaki TÜM kayıtlar silinecek. Emin misiniz?')) return
-                const yazilan = prompt('Onaylamak için SİL yazın')
+                if (!(await onayla({ baslik: 'Tüm kayıtlar silinsin mi?', mesaj: 'Bu cihazdaki bütün sahneler, ödemeler, mekanlar ve kişiler silinecek. Silmeden önce yedek kendiliğinden indirilir.', evet: 'Devam', tehlike: true }))) return
+                const yazilan = await yaziIste({ baslik: 'Son onay', mesaj: 'Onaylamak için aşağıya SİL yazın.', ipucu: 'SİL', evet: 'Hepsini sil', tehlike: true })
                 if (yazilan === null) return
+                // Klavye Türkçe olmasa da kabul et: SİL, SIL, sil, sıl
                 if (!['sil', 'sıl'].includes(yazilan.trim().toLocaleLowerCase('tr-TR'))) {
-                  alert('Silme iptal edildi: onay için SİL yazılmadı. Hiçbir kayıt silinmedi.')
+                  await uyar({ baslik: 'Silme iptal edildi', mesaj: 'Onay için SİL yazılmadı. Hiçbir kayıt silinmedi.' })
                   return
                 }
                 const y = await yedekAl()
@@ -203,12 +204,12 @@ function BulutBolumu() {
         </Dugme>
         <Dugme
           onClick={async () => {
-            if (!confirm('Bu cihazdaki kopya silinip buluttan baştan indirilecek. Buluttaki kayıtlara dokunulmaz. Devam edilsin mi?')) return
+            if (!(await onayla({ baslik: 'Buluttan yeniden indirilsin mi?', mesaj: 'Bu cihazdaki kopya silinip buluttan baştan indirilecek. Buluttaki kayıtlara dokunulmaz.', evet: 'İndir' }))) return
             try {
               await buluttanYenidenIndir()
               bildir('Buluttan yeniden indirildi')
             } catch (err) {
-              alert(err instanceof Error ? err.message : String(err))
+              await uyar({ baslik: 'İndirilemedi', mesaj: err instanceof Error ? err.message : String(err) })
             }
           }}
         >
@@ -217,7 +218,7 @@ function BulutBolumu() {
         <Dugme
           tur="hayalet"
           onClick={async () => {
-            if (e.bekleyen > 0 && !confirm('Gönderilmemiş değişiklikler var. Çıkış yapsanız da cihazda kalırlar ve yeniden girince gönderilirler. Çıkılsın mı?')) return
+            if (e.bekleyen > 0 && !(await onayla({ baslik: 'Çıkış yapılsın mı?', mesaj: 'Gönderilmemiş değişiklikler var. Çıkış yapsanız da cihazda kalırlar ve yeniden girince gönderilirler.', evet: 'Çıkış yap' }))) return
             await cikis()
           }}
         >
@@ -235,7 +236,7 @@ function BulutBolumu() {
               setSifreAcik(false)
               bildir('Yeni şifre kaydedildi; bundan sonra bu şifreyle girin')
             } catch (err) {
-              alert(err instanceof Error ? err.message : String(err))
+              await uyar({ baslik: 'Şifre kaydedilemedi', mesaj: err instanceof Error ? err.message : String(err) })
             }
           }}
         >

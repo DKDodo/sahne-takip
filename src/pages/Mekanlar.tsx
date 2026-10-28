@@ -2,7 +2,7 @@ import { ArrowDownLeft, MapPin, Pencil, Phone, Plus, Trash2 } from 'lucide-react
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFormAc } from '../components/formlar'
 import { BolumBasligi, ParaSatiri, SahneSatiri } from '../components/parcalar'
-import { Baslik, Bos, Dugme, Kart, Liste, Ozet, Satir, useBildirim } from '../components/ui'
+import { Baslik, Bos, Dugme, Kart, Liste, onayla, Ozet, Satir, useBildirim, uyar } from '../components/ui'
 import { para, tarihGoster } from '../lib/format'
 import { mekanOzeti, sahneDurumlari } from '../lib/hesap'
 import { sil, type TumVeri } from '../lib/veri'
@@ -98,7 +98,8 @@ export function MekanDetay({ veri }: { veri: TumVeri }) {
           tur="hayalet"
           className="text-red-600"
           onClick={async () => {
-            if (sahneler.length || odemeler.length) return alert('Bu mekanın sahneleri ya da ödemeleri var. Önce onları silin.')
+            if (sahneler.length || odemeler.length) return uyar({ baslik: 'Bu mekan silinemez', mesaj: 'Bu mekanın sahneleri ya da ödemeleri var. Önce onları silin.' })
+            if (!(await onayla({ baslik: 'Mekan silinsin mi?', mesaj: `${m.ad}. Silinenler'den geri alabilirsiniz.`, evet: 'Sil', tehlike: true }))) return
             const geri = await sil('mekanlar', m.id)
             bildir('Mekan silindi', geri)
             git('/mekanlar', { replace: true })

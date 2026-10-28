@@ -27,7 +27,7 @@ export function TelefonaGec({ acik, kapat }: { acik: boolean; kapat: () => void 
             Sağ üstteki <b>⋮</b> menüsüne dokunun.
           </Adim>
           <Adim no={3} simge={<SquarePlus size={18} />}>
-            <b>Uygulamayı yükle</b>'yi (ya da <b>Ana ekrana ekle</b>) seçin. Mikrofon simgesinden tam ekran açılır.
+            <b>Uygulamayı yükle</b>'yi (ya da <b>Ana ekrana ekle</b>) seçin. Ana ekrandaki Sahne Takip simgesinden tam ekran açılır.
           </Adim>
         </ol>
       </div>

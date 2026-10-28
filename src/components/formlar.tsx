@@ -1,10 +1,10 @@
-import { Plus, Trash2, Users } from 'lucide-react'
+import { CalendarDays, MapPin, Plus, Sparkles, Trash2, User, Users } from 'lucide-react'
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { db, ODEME_SEKILLERI, type Gonderim, type Kisi, type Mekan, type OdemeSekli, type Sahne, type Tahsilat } from '../db'
 import { bugun, para, sayiMetni, sayiOku, simdi, tarihGoster, yeniId, yuvarla } from '../lib/format'
 import { esitBol, kisiPaylari, sahneDurumlari } from '../lib/hesap'
 import { adBul, sil as kayitSil, type TumVeri } from '../lib/veri'
-import { cx, Dugme, Etiket, Girdi, MetinAlani, Pencere, SayiGirdi, Secim, useBildirim } from './ui'
+import { cx, Dugme, Etiket, Girdi, MetinAlani, Pencere, SayiGirdi, SecimDugmesi, useBildirim, type SecimSecenegi } from './ui'
 
 /* ---------- Formları her ekrandan açmak için ---------- */
 export type FormIstegi =
@@ -128,44 +128,43 @@ async function kisiBul(secim: string, yeniAd: string): Promise<string | null> {
   return k.id
 }
 
+/* Etiketli alan; içinde düğme olduğu için <label> değil (etikete dokunmak listeyi açmasın). */
+function Alan({ etiket, ipucu, children }: { etiket: string; ipucu?: string; children: ReactNode }) {
+  return (
+    <div className="min-w-0" role="group" aria-label={etiket}>
+      <span className="mb-1.5 block text-[13px] font-medium text-stone-600 dark:text-stone-400">{etiket}</span>
+      {children}
+      {ipucu && <span className="mt-1 block text-xs text-stone-500">{ipucu}</span>}
+    </div>
+  )
+}
+
+const mekanSecenekleri = (veri: TumVeri): SecimSecenegi[] => [
+  ...veri.mekanlar.map((m) => ({ deger: m.id, ad: m.ad, alt: m.notlar, simge: <MapPin size={18} /> })),
+  { deger: YENI, ad: 'Yeni mekan', alt: 'Listede yoksa adını yazın', simge: <Plus size={18} /> },
+]
+const kisiSecenekleri = (veri: TumVeri): SecimSecenegi[] => [
+  ...veri.kisiler.map((k) => ({ deger: k.id, ad: k.ad, alt: k.rol, simge: <User size={18} /> })),
+  { deger: YENI, ad: 'Yeni kişi', alt: 'Listede yoksa adını yazın', simge: <Plus size={18} /> },
+]
+
 function MekanSecimi({ veri, deger, sec, yeniAd, setYeniAd }: { veri: TumVeri; deger: string; sec: (v: string) => void; yeniAd: string; setYeniAd: (v: string) => void }) {
   const yeni = deger === YENI || !veri.mekanlar.length
   return (
-    <Etiket etiket="Mekan">
-      {veri.mekanlar.length > 0 && (
-        <Secim value={deger} onChange={(e) => sec(e.target.value)}>
-          <option value="">Mekan seçin</option>
-          {veri.mekanlar.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.ad}
-            </option>
-          ))}
-          <option value={YENI}>+ Yeni mekan</option>
-        </Secim>
-      )}
-      {yeni && <Girdi className={veri.mekanlar.length ? 'mt-2' : ''} value={yeniAd} onChange={(e) => setYeniAd(e.target.value)} placeholder="Yeni mekanın adı" autoFocus={veri.mekanlar.length > 0} />}
-    </Etiket>
+    <Alan etiket="Mekan">
+      {veri.mekanlar.length > 0 && <SecimDugmesi deger={deger} sec={sec} secenekler={mekanSecenekleri(veri)} baslik="Mekan seçin" bos="Mekan seçin" aria-label="Mekan" />}
+      {yeni && <Girdi className={veri.mekanlar.length ? 'mt-2' : ''} value={yeniAd} onChange={(e) => setYeniAd(e.target.value)} placeholder="Yeni mekanın adı" aria-label="Yeni mekanın adı" autoFocus={veri.mekanlar.length > 0} />}
+    </Alan>
   )
 }
 
 function KisiSecimi({ veri, deger, sec, yeniAd, setYeniAd, etiket = 'Kişi' }: { veri: TumVeri; deger: string; sec: (v: string) => void; yeniAd: string; setYeniAd: (v: string) => void; etiket?: string }) {
   const yeni = deger === YENI || !veri.kisiler.length
   return (
-    <Etiket etiket={etiket}>
-      {veri.kisiler.length > 0 && (
-        <Secim value={deger} onChange={(e) => sec(e.target.value)}>
-          <option value="">Kişi seçin</option>
-          {veri.kisiler.map((k) => (
-            <option key={k.id} value={k.id}>
-              {k.ad}
-              {k.rol ? ` · ${k.rol}` : ''}
-            </option>
-          ))}
-          <option value={YENI}>+ Yeni kişi</option>
-        </Secim>
-      )}
-      {yeni && <Girdi className={veri.kisiler.length ? 'mt-2' : ''} value={yeniAd} onChange={(e) => setYeniAd(e.target.value)} placeholder="Adı" />}
-    </Etiket>
+    <Alan etiket={etiket}>
+      {veri.kisiler.length > 0 && <SecimDugmesi deger={deger} sec={sec} secenekler={kisiSecenekleri(veri)} baslik="Kime?" bos="Kişi seçin" aria-label={etiket} />}
+      {yeni && <Girdi className={veri.kisiler.length ? 'mt-2' : ''} value={yeniAd} onChange={(e) => setYeniAd(e.target.value)} placeholder="Adı" aria-label="Yeni kişinin adı" />}
+    </Alan>
   )
 }
 
@@ -265,17 +264,7 @@ function SahneFormu({ veri, kapat, kayit, mekanId }: { veri: TumVeri; kapat: () 
           {paylar.map((p, i) => (
             <div key={p.anahtar} className="grid grid-cols-[1fr_110px_auto] items-start gap-2">
               <div className="min-w-0">
-                {veri.kisiler.length > 0 && (
-                  <Secim value={p.kisiId} onChange={(e) => paySatiri(i, { kisiId: e.target.value })} aria-label="Kişi">
-                    <option value="">Kişi seçin</option>
-                    {veri.kisiler.map((k) => (
-                      <option key={k.id} value={k.id}>
-                        {k.ad}
-                      </option>
-                    ))}
-                    <option value={YENI}>+ Yeni kişi</option>
-                  </Secim>
-                )}
+                {veri.kisiler.length > 0 && <SecimDugmesi deger={p.kisiId} sec={(v) => paySatiri(i, { kisiId: v })} secenekler={kisiSecenekleri(veri)} baslik="Kimin payı?" bos="Kişi seçin" aria-label="Kişi" />}
                 {(p.kisiId === YENI || !veri.kisiler.length) && (
                   <Girdi className={veri.kisiler.length ? 'mt-2' : ''} value={p.yeniAd} onChange={(e) => paySatiri(i, { yeniAd: e.target.value })} placeholder="Adı (örn. Davulcu Ali)" aria-label="Yeni kişinin adı" />
                 )}
@@ -371,23 +360,22 @@ function TahsilatFormu({ veri, kapat, kayit, mekanId, sahneId }: { veri: TumVeri
         setYeniAd={setYeniMekan}
       />
       {mekan && mekan !== YENI && (
-        <Etiket etiket="Hangi sahne için?" ipucu={sahne ? undefined : 'Seçmezseniz en eski ödenmemiş sahneye sayılır.'}>
-          <Secim
-            value={sahne}
-            onChange={(e) => {
-              setSahne(e.target.value)
-              const k = durumlar.get(e.target.value)?.kalan
+        <Alan etiket="Hangi sahne için?" ipucu={sahne ? undefined : 'Seçmezseniz en eski ödenmemiş sahneye sayılır.'}>
+          <SecimDugmesi
+            deger={sahne}
+            sec={(v) => {
+              setSahne(v)
+              const k = durumlar.get(v)?.kalan
               if (k && !kayit) setTutar(sayiMetni(k))
             }}
-          >
-            <option value="">Otomatik (en eski borç)</option>
-            {mekanSahneleri.map((s) => (
-              <option key={s.id} value={s.id}>
-                {tarihGoster(s.tarih)} · kalan {para(durumlar.get(s.id)?.kalan ?? 0)}
-              </option>
-            ))}
-          </Secim>
-        </Etiket>
+            baslik="Hangi sahne için?"
+            aria-label="Hangi sahne için"
+            secenekler={[
+              { deger: '', ad: 'Otomatik', alt: 'En eski ödenmemiş sahneye sayılır', simge: <Sparkles size={18} /> },
+              ...mekanSahneleri.map((s) => ({ deger: s.id, ad: tarihGoster(s.tarih), alt: `kalan ${para(durumlar.get(s.id)?.kalan ?? 0)}`, simge: <CalendarDays size={18} /> })),
+            ]}
+          />
+        </Alan>
       )}
       <div className="grid grid-cols-2 gap-3">
         <Etiket etiket="Tutar (TL)">
@@ -454,23 +442,22 @@ function GonderimFormu({ veri, kapat, kayit, kisiId, sahneId }: { veri: TumVeri;
         setYeniAd={setYeniKisi}
       />
       {sahneler.length > 0 && (
-        <Etiket etiket="Hangi sahnenin payı?" ipucu={sahne ? undefined : 'Seçmezseniz en eski payına sayılır.'}>
-          <Secim
-            value={sahne}
-            onChange={(e) => {
-              setSahne(e.target.value)
-              const k = kalanPay(e.target.value)
+        <Alan etiket="Hangi sahnenin payı?" ipucu={sahne ? undefined : 'Seçmezseniz en eski payına sayılır.'}>
+          <SecimDugmesi
+            deger={sahne}
+            sec={(v) => {
+              setSahne(v)
+              const k = kalanPay(v)
               if (k > 0 && !kayit) setTutar(sayiMetni(k))
             }}
-          >
-            <option value="">Otomatik (en eski pay)</option>
-            {sahneler.map((b) => (
-              <option key={b.id} value={b.id}>
-                {tarihGoster(b.tarih)} · {adBul(veri.mekanlar, b.sahne.mekanId)} · kalan {para(kalanPay(b.id))}
-              </option>
-            ))}
-          </Secim>
-        </Etiket>
+            baslik="Hangi sahnenin payı?"
+            aria-label="Hangi sahnenin payı"
+            secenekler={[
+              { deger: '', ad: 'Otomatik', alt: 'En eski payına sayılır', simge: <Sparkles size={18} /> },
+              ...sahneler.map((b) => ({ deger: b.id, ad: `${tarihGoster(b.tarih)} · ${adBul(veri.mekanlar, b.sahne.mekanId)}`, alt: `kalan ${para(kalanPay(b.id))}`, simge: <CalendarDays size={18} /> })),
+            ]}
+          />
+        </Alan>
       )}
       <div className="grid grid-cols-2 gap-3">
         <Etiket etiket="Tutar (TL)">

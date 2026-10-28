@@ -16,10 +16,11 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 | 6 | Telefon Windows bilgisayara bağlı | 🔄 Aynı adres bilgisayarda da açılır; karekodla telefona geçiş |
 | 7 | Aynı tema yeterli | ✅ Sarı-siyah, açık/koyu tema, lamba düğmesi |
 | 8 | Ad: "Sahne Takip"; imza yok | ✅ |
-| 9 | Bulut olsun | ⏳ Ayrı Supabase projesi; e-posta + şifre ile giriş |
+| 9 | Bulut olsun | ⏸ 28 Ekim: kullanıcı "şimdilik dursun" dedi; o zamana kadar kayıtlar telefonda, haftalık yedek |
 | 10 | Bölüşme hesabı | ✅ Sahne başına ekip payları ("eşit böl"); kime ne kadar borcum kaldı |
 | 11 | Bu ay ne kadar kazandım | ✅ Pano'da ve Kazanç ekranında aylık |
-| 12 | Commit ve yayın kullanıcı onayıyla | ⏸ Onaydan önce commit/push yok |
+| 12 | Commit ve yayın kullanıcı onayıyla | ✅ 28 Ekim: onaylandı (49df915), site yayında |
+| 13 | Daha hoş yazı tipi ve logo; açılan pencereler temaya uysun | ✅ KARAR (28 Ekim): yazı tipi **Sora** (C), logo **ses dalgası ve ₺** (3). Telefonun gri onay/uyarı kutuları ve açılır listeleri yerine uygulamanın alttan açılan pencereleri; tarih/saat seçici telefonun, rengi sarı. Android 412 ve 360 px'te 40/40 |
 
 ## Kararlar (28 Ekim 2026)
 
@@ -37,10 +38,12 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 - Android 412 × 915 ve 360 × 800'de deneme: 32/32 (sahne, eşit böl, ödeme, gönderim, hesaplar, silme/geri alma, kalıcılık, koyu tema, yana taşma yok)
 - Birim testleri: 25 (13 hesap, 12 bulut eşitleme)
 
-### Adım 2 — Bulut ⏳
+### Adım 2 — Bulut ⏸ (kullanıcı bekletti, 28 Ekim)
 - Yeni Supabase projesi (kullanıcı açar), kurulum SQL'i, izinli e-posta, hesap, yeni hesap açmayı kapatma, publishable key
 
-### Adım 3 — Yayın ⏳
+### Adım 3 — Yayın ✅
+- ✅ 28 Ekim: https://dkdodo.github.io/sahne-takip/ yayında; canlı sitede Android denemesi 32/32
+- ⏳ Gerçek Android telefonda yükleme ve deneme
 - GitHub deposu `DKDodo/sahne-takip` (kullanıcı açar, herkese açık) → GitHub Actions (`.github/workflows/yayin.yml`) → GitHub Pages
 - Depo ayarı: Settings → Pages → Source: GitHub Actions
 - Android'de Chrome → Uygulamayı yükle
